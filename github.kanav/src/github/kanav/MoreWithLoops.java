@@ -76,15 +76,11 @@ public class MoreWithLoops {
 			
 			int count = Math.max(num, num2);
 			
-			while (true) {
-				if(count % num == 0 && count % num2 == 0 ) {
-					System.out.println(count);
-					break;
-				}
+			while (count % num != 0 && count % num2 != 0) {
 				count++;
+				}
+			System.out.println(count);
 			}
-			
-		}
 		
 	
 	
