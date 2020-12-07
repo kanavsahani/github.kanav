@@ -46,9 +46,9 @@ public class StartingWithArrays {
 	public static void main(String[] args) {
 		StartingWithArrays runner = new StartingWithArrays();
 		runner.display();
-//		runner.onetoN(5);
-//		runner.swap();
+		runner.onetoN(5);
+		runner.swap();
 		runner.userArray();
-//		runner.reverse();
+		runner.reverse();
 	}
 }
