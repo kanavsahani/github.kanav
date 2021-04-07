@@ -14,28 +14,31 @@ public class BankAccount {
 		this.owner = owner;
 		this.rate = rate;
 	}
-	public int deposit(int money) {
+	public double deposit(double money) {
 		this.money += money;
 		return money;
 	}
 	public int withdraw(int money) {
 		this.money -= money;
 		return money;
+		
 	}
-	public double addInterest() {
-		money += (money*rate);
+	public int getMoney() {
 		return money;
 	}
 	public String toString() {
 		return money + "";
 	}
+	public double getRate() {
+		return rate;
+	}
 	public static void main(String[] args) {
-		BankAccount sample1 = new BankAccount("kanav", 100, 0.02);
-		BankAccount sample2 = new BankAccount("Joel", .01);
-		BankAccount sample3 = new BankAccount("James", 1000, 1);
+		GreatAccount sample1 = new GreatAccount("kanav", 100, 0.02);
+		GreatAccount sample2 = new GreatAccount("Joel", .01);
+		GreatAccount sample3 = new GreatAccount("James", 1000, 1);
 		
-		sample3.addInterest();
-		System.out.println(sample3);
+		sample2.deposit(50);
+		System.out.println(sample2);
 		
 	}
 }
