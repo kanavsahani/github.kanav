@@ -35,18 +35,20 @@ public class LinkedList<E> {
             this.sized++;
             return;
         }
-
+        
         try {
-            Node curr = first;
-            for(int x = 0; x < i-1; x++) {
-                curr = curr.next;
+            Node prev = getnode(i-1);
+            if(i < this.sized) {
+            	node.next = prev.next;
             }
-            
-            node.next = curr.next;
-            curr.next = node;
+            prev.next = node;
+            this.sized++;
         } catch(NullPointerException e) {
             throw new IndexOutOfBoundsException();
         }
+    }
+    public void add(E info) {
+    	this.add(info, this.size());
     }
     public E get(int indice) {
     	try {
@@ -54,8 +56,19 @@ public class LinkedList<E> {
         		for(int x = 0; x < indice; x++) {
         			curr = curr.next;
         		}
-    		
     	return curr.data;
+    }
+    	catch(NullPointerException e) {
+            throw new IndexOutOfBoundsException();
+    	}
+    }
+    public Node getnode(int indice) {
+    	try {
+    			Node curr = first;
+        		for(int x = 0; x < indice; x++) {
+        			curr = curr.next;
+        		}
+    	return curr;
     }
     	catch(NullPointerException e) {
             throw new IndexOutOfBoundsException();
@@ -64,16 +77,16 @@ public class LinkedList<E> {
     public LinkedList<E>.Node remove(int i) {
     	Node curr = first;
     	for(int x = 0; x < i-1; x++) {
-            if (x == i) {
-            	curr = curr.next;
-            	this.sized--;
-            }
     		curr = curr.next;
             
         }
     	curr.next=curr.next.next;
-    	
+
+    	this.sized--;
     	return curr;
+    }
+    public int size() {
+    	return sized;
     }
     public static void main(String[] args) {
     	LinkedList<String> nodes = new LinkedList<String>();
@@ -83,6 +96,7 @@ public class LinkedList<E> {
     	nodes.add("y", 3);
     	nodes.add("g", 4);
     	nodes.add("her", 5);
+
     	System.out.println(nodes.get(0));
     	System.out.println(nodes.get(1));
     	System.out.println(nodes.get(2));
@@ -93,5 +107,10 @@ public class LinkedList<E> {
     	System.out.println(nodes.get(6));
     	nodes.remove(5);
     	System.out.println(nodes.get(5));
+
+    	System.out.println("size"+nodes.sized);
+    	nodes.add("3");
+    	System.out.println(nodes.get(nodes.sized-1));
+    	System.out.println(nodes.size());
     }
 }
