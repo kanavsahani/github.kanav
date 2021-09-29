@@ -24,6 +24,7 @@ public class LinkedList<E> {
         Node node = new Node(info);
         
         if(this.first == null) {
+        
             this.first = node;
             this.sized++;
             return;
@@ -74,8 +75,15 @@ public class LinkedList<E> {
             throw new IndexOutOfBoundsException();
     	}
     }
-    public LinkedList<E>.Node remove(int i) {
+    public E remove(int i) {
     	Node curr = first;
+    	
+    	if (i == 0) {
+    		curr.next = curr.next.next;
+    		this.sized--;
+    		return null;
+    	}
+    
     	for(int x = 0; x < i-1; x++) {
     		curr = curr.next;
             
@@ -83,7 +91,7 @@ public class LinkedList<E> {
     	curr.next=curr.next.next;
 
     	this.sized--;
-    	return curr;
+    	return curr.data;
     }
     public int size() {
     	return sized;
