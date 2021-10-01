@@ -16,6 +16,9 @@ public class Deck {
 			this.suit = suit;
 			this.ranking = ranking;
 		}
+		public String toString() {
+			return ranking + " of " + suit;
+		}
 		
 	}
 	public Deck() {
@@ -26,13 +29,10 @@ public class Deck {
 				deck.add(new Card(suit[j],ranking[i]));
 			}
 		}
-//		shuffle();
+		shuffle();
+		split();
 
-		split();		System.out.println("size: " + P2Deck.size());
-
-		for (int i = 0; i < 26; i++) {
-			System.out.println(P2Deck.get(i).ranking);
-		}
+		game();
 	}
 	public void shuffle() {
 
@@ -49,38 +49,65 @@ public class Deck {
 		}
 		
 	}
-	
+
 	public void game() {
 		
-		for (int i = 0; i < deck.size(); i++) {
-			System.out.println(deck.get(i));
-			System.out.println(P2Deck.get(i));
-			if (deck.get(i).ranking > P2Deck.get(i).ranking) {
+		while (P2Deck.size() > 0 && deck.size() > 0) {
+			System.out.println("\nScore:" + P1Score + "\n");
+			System.out.println("Score:" + P2Score + "\n");
+			System.out.println(deck.get(0));
+			System.out.println(P2Deck.get(0));
+			if (deck.get(0).ranking > P2Deck.get(0).ranking) {
 				P1Score++;
-				deck.add(P2Deck.get(i));
-				P2Deck.remove(i);
+				deck.add(P2Deck.get(0));
+				deck.add(deck.get(0));
+				P2Deck.remove(0);
+				deck.remove(0);
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
-			if (P2Deck.get(i).ranking < deck.get(i).ranking) {
+			else if (P2Deck.get(0).ranking > deck.get(0).ranking) {
 				P2Score++;
-				P2Deck.add(deck.get(i));
-				deck.remove(i);
+				P2Deck.add(deck.get(0));
+				P2Deck.add(P2Deck.get(0));
+				deck.remove(0);
+				P2Deck.remove(0);
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
+			else if (P2Deck.get(0).ranking == deck.get(0).ranking) {
+				deck.remove(0);
+				P2Deck.remove(0);
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			
 		}
 		if (deck.size() == 0 || P2Deck.size() == 0) {
 			
 			if (P1Score > P2Score) {
-				System.out.println("Player 1 Wins!");
+				System.out.println("\nPlayer 1 Wins! \n");
 			}
 			if (P2Score > P1Score) {
-				System.out.println("Player 2 Wins!");
+				System.out.println("\nPlayer 2 Wins! \n");
+			}
+			if (P1Score == P2Score) {
+				System.out.println("\nIt's a Tie! \n");
 			}
 		}
-		System.out.println("Score:" + P1Score);
-		System.out.println("Score:" + P2Score);
+		
 	}
 	public static void main (String[] args) {
 		new Deck();
 	}
 	
 }
-
