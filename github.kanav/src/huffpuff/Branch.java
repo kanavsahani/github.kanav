@@ -10,9 +10,8 @@ public class Branch<E> {
 		this.branch1 = branch1;
 		this.branch2 = branch2;
 	}
-	public Branch(E information, boolean maybeLeaf) {
+	public Branch(E information) {
 		info = information;
-		this.maybeLeaf = maybeLeaf;
 		maybeLeaf = true;
 	}
 }
