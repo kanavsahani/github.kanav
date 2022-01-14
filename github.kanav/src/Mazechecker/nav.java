@@ -4,6 +4,10 @@ import java.awt.Color;
 
 public class nav extends Bot{
 String mode = "forward";
+ // The solution to the maze
+int startX, startY; // Starting X and Y values of maze
+int endX, endY;     // Ending X and Y values of maze
+
 	
 	public nav(MazeRunner mr, Color c) {
 		super(mr,c);
@@ -11,18 +15,16 @@ String mode = "forward";
 	}
 
 	public void move() {
+
 		if (mode.equals("forward")) {
-			if (this.moveForward() == true) {
-				mode = "left";
-			}		
-			else if (mode.equals("left")) {
-				turnLeft();
-				mode = "forward";
-			}
+			moveForward();
+			mode = "left";
+			
+		}		
 		else {
-			turnLeft();	
+			turnLeft();
+			mode = "forward";
 		}
-	}
 	}
 }
 
