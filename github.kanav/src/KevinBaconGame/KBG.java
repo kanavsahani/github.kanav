@@ -23,18 +23,19 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
-
+//all imports
+// Kevin Bacon Game By Kanav Sahani mwith help from mr. Friedman
 public class KBG extends JPanel {
 	HashMap<Integer, String> movies;
 	HashMap<Integer, String> actors;
 	HashMap<Integer, Integer> movieWithActors;
 	LabeledGraph<String, String> connections;
-	private final int WIDTH = 600, HEIGHT = 600;
-	private String content;
+	//caches created to hold information from the files and hold the connections
+	private final int WIDTH = 600, HEIGHT = 600; // fixed variables for the screening
 	public KBG() throws FileNotFoundException {
 		this.movies = new HashMap();
 		this.actors = new HashMap();
-		this.connections = new LabeledGraph();		
+		this.connections = new LabeledGraph(); // initiate the caches in the constructor		
 		// the main container
 		JFrame frame = new JFrame();
 		frame.setSize(WIDTH, HEIGHT);
@@ -51,7 +52,7 @@ public class KBG extends JPanel {
 				+ "\nClick on one of the buttons to see any of the special features "
 				+ "\nor choose to type in two separate actor names and see their connection through the use of BFS!");
 		displayarea.setEditable(false);
-		// create and add listeners to the buttons
+		// add containers for text inputs
 		final JTextArea inputAreaOne = new JTextArea();
         inputAreaOne.setPreferredSize(new Dimension(237, 25));
         inputAreaOne.setEditable(true);
@@ -61,31 +62,33 @@ public class KBG extends JPanel {
         final JTextArea responseArea = new JTextArea();
         responseArea.setPreferredSize(new Dimension(525, 600));
         responseArea.setEditable(false);
+       // run the BFS to find the path between the two inputs from the user
         final ArrayList<String> path = connections.BFS(inputAreaOne.getText().toLowerCase(), inputAreaTwo.getText().toLowerCase());
         if(path == null) {
-            responseArea.setText("Could not find any connections");
+            responseArea.setText("Could not find any connections"); //edge case
             return;
         }
         responseArea.setText(inputAreaOne.getText().toLowerCase() + " is connected to " + inputAreaTwo.getText().toLowerCase() + " by " + path);
-		JButton mostCommonActorButton = new JButton("Most Common Actor");
-		mostCommonActorButton.addActionListener(new ActionListener() {
+		//print out connection
+     // create and add listeners to the buttons
+        JButton mostCommonActorButton = new JButton("Most Common Actor");
+		mostCommonActorButton.addActionListener(new ActionListener() { // special feature
 			public void actionPerformed(ActionEvent e) {
 				String output = null;
 				try {
 					output = "Most common actor is " + mostCommonActor(movieWithActors);
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 				displayarea.setText(displayarea.getText()+"\n"+output+"\n");
 			}
 		});
-		JButton MovieWithMostActorButton = new JButton("Movie With Most Actors");
+		JButton MovieWithMostActorButton = new JButton("Movie With Most Actors"); //special feature
 		MovieWithMostActorButton.addActionListener(new ActionListener() {
 			BufferedReader CR = new BufferedReader(new FileReader("movie-actors.txt"));
 			public void actionPerformed(ActionEvent e) {
 				HashMap<Integer, Integer> movieActor = new HashMap<Integer, Integer>();
-				
+				// hashmap for movie-actors
 				String line;
 				String[] split;
 				try {
@@ -97,7 +100,7 @@ public class KBG extends JPanel {
 				try {
 					while((line = CR.readLine())!= null){
 						split = line.split("~");
-						movieActor.put(Integer.parseInt(split[0]), Integer.parseInt(split[1]));
+						movieActor.put(Integer.parseInt(split[0]), Integer.parseInt(split[1])); // fill the hashmap
 					}
 				} catch (NumberFormatException | IOException e1) {
 					e1.printStackTrace();
@@ -105,17 +108,17 @@ public class KBG extends JPanel {
 				String output = "";
 				String common = MovieWithMostActor(movieActor);
 				output += "Movie with most actors is"+common+". ";
-				displayarea.setText(displayarea.getText()+"\n"+output+"\n");
+				displayarea.setText(displayarea.getText()+"\n"+output+"\n"); //print out answer for special feature
 			}
 		});
-		JButton longestMovieNameButton = new JButton("Longest Movie Name");
+		JButton longestMovieNameButton = new JButton("Longest Movie Name"); //special feature
 		longestMovieNameButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String output = "\n   Longest movie name is "+longestMovieName(movies)+".";
-				displayarea.setText(displayarea.getText()+"\n"+output+"\n");
+				displayarea.setText(displayarea.getText()+"\n"+output+"\n");// print out answer
 			}
 		});
-		JButton clearButton = new JButton("Clear");
+		JButton clearButton = new JButton("Clear"); // button for clearing everything
 		clearButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				displayarea.setText("");
@@ -124,8 +127,7 @@ public class KBG extends JPanel {
 		});
 		// add a scroll bar to the text area
 		JScrollPane scroll = new JScrollPane (displayarea);
-		scroll.setVerticalScrollBarPolicy(
-				ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scroll.setPreferredSize(new Dimension(400,475));
 		panel.add(scroll);
 		
@@ -148,65 +150,65 @@ public class KBG extends JPanel {
 	}
 	public void FileReader() {
 		try {
-			BufferedReader in = new BufferedReader(new FileReader("actors.txt"));
+			BufferedReader in = new BufferedReader(new FileReader("actors.txt")); //read the actors.txt file
 			String line;
-			while ((line = in.readLine())!= null) {
-					String[] split = line.split("~");
-					actors.put(Integer.parseInt(split[0]), split[1]);
-					connections.addVertex(split[1]);
+			while ((line = in.readLine())!= null) {  // read until the file ends
+					String[] split = line.split("~"); // split by the ~
+					actors.put(Integer.parseInt(split[0]), split[1]); // fill the cache
+					connections.addVertex(split[1]); // create vertices for connections
 				}
-			BufferedReader out = new BufferedReader(new FileReader("movies.txt"));
+			BufferedReader out = new BufferedReader(new FileReader("movies.txt")); // read the movies.txt file
 			String line1;
 			
-			while ((line1 = out.readLine())!= null) {
-				String[] split1 = line1.split("~");
-				movies.put(Integer.parseInt(split1[0]), split1[1]);
+			while ((line1 = out.readLine())!= null) { // read until the file ends
+				String[] split1 = line1.split("~"); // split by the ~
+				movies.put(Integer.parseInt(split1[0]), split1[1]); // fill the cache
 			}
 			BufferedReader CR = new BufferedReader(new FileReader("movie-actors.txt")); // CR = connection reader
 			String line2;
-			ArrayList<Integer> actorConnector = new ArrayList<Integer>();
-			String[] split = CR.readLine().split("~");
-			int currentMovie = Integer.parseInt(split[0]);
-			actorConnector.add(Integer.parseInt(split[1]));
-			while((line2 = CR.readLine())!= null){
-				split = line2.split("~");
+			ArrayList<Integer> actorConnector = new ArrayList<Integer>(); // new array list for the actors and movie connections
+			String[] split = CR.readLine().split("~"); // split by the ~
+			int currentMovie = Integer.parseInt(split[0]); // split by the ~
+			actorConnector.add(Integer.parseInt(split[1])); // split by the ~
+			while((line2 = CR.readLine())!= null){ // read until the file ends
+				split = line2.split("~"); // same split
 				if (Integer.parseInt(split[0]) != currentMovie) {
-					actorConnector.clear();
-					currentMovie = Integer.parseInt(split[0]);
+					actorConnector.clear(); // clear if it is wrong
+					currentMovie = Integer.parseInt(split[0]); // and keep changing the current movie
 				}
 				for (int i = 0; i < actorConnector.size(); i++) {
-					String currActor = actors.get(actorConnector.get(i));
+					String currActor = actors.get(actorConnector.get(i)); 
 					String currentActor = actors.get(Integer.parseInt(split[1]));
-					connections.connect(currActor, currentActor, movies.get(currentMovie));					
+					connections.connect(currActor, currentActor, movies.get(currentMovie));	// connect everything with the for loop				
 				}
-				actorConnector.add(Integer.parseInt(split[1]));				
+				actorConnector.add(Integer.parseInt(split[1]));	// add the final one			
 			}
 		} catch (FileNotFoundException e1) {
-			System.out.println("File not found :(");
+			System.out.println("File not found :("); // edge case catch
 			return;
-		} catch (IOException e1) {
+		} catch (IOException e1) { // edge case catch
 			e1.printStackTrace();
 		}
 		
 		
 	}
-	public String mostCommonActor(HashMap<Integer, Integer> actorConnection) throws IOException {
+	public String mostCommonActor(HashMap<Integer, Integer> actorConnection) throws IOException { // special feature that finds the most common actor
 		String line, word = "";    
         int count = 0, maxCount = 0;    
-        ArrayList<String> words = new ArrayList<String>();  
+        ArrayList<String> numbers = new ArrayList<String>();  
         BufferedReader CR = new BufferedReader(new FileReader("movie-actors.txt"));
         while((line = CR.readLine()) != null) {    
             String string[] = line.toLowerCase().split("([,.\\s]+) ");    
             //Adding all words generated in previous step into words    
             for(String s : string){    
-                words.add(s);    
+                numbers.add(s);    
             }
         }
-        for(int i = 0; i < words.size(); i++){    
+        for(int i = 0; i < numbers.size(); i++){    
             count = 1;    
-            //Count each word in the file and store it in variable count    
-            for(int j = i+1; j < words.size(); j++){    
-                if(words.get(i).equals(words.get(j))){    
+            //Count each number in the file and store it in variable count    
+            for(int j = i+1; j < numbers.size(); j++){    
+                if(numbers.get(i).equals(numbers.get(j))){    
                     count++;    
                 }     
             }    
@@ -214,41 +216,40 @@ public class KBG extends JPanel {
             //and corresponding word to variable word    
             if(count > maxCount){    
                 maxCount = count;    
-                word = words.get(i);    
+                word = numbers.get(i);    
             }
             
         }    
-		//possibly make an array for each actor name and add one once each actor pops up and print the highest value
         return "Most repeated word: " + word;
 	}
-	public String MovieWithMostActor(HashMap<Integer, Integer> movieConnection) {
+	public String MovieWithMostActor(HashMap<Integer, Integer> movieConnection) { // special feature that finds movie with the most actors
 		int[] numberOfConnections = null;
 		int i = 0;
-			for (Integer key:movieConnection.values()) {
+			for (Integer key:movieConnection.values()) { // go through everything and add one to whatever index you are at
 				numberOfConnections[i]+=1;
 				if (key != key-1) {
-					i++;
+					i++; // if new movie, next index
 				}
 			}
-			int max = numberOfConnections[0];
+			int max = numberOfConnections[0]; // start at index 0
 			 for (i = 1; i < numberOfConnections.length; i++) {
 				 if (numberOfConnections[i] > max) {
-	            	 max = numberOfConnections[i];
+	            	 max = numberOfConnections[i]; // keep changing until you find the largest amount
 	             } 
 			 }     
-			return max + "";
+			return max + ""; // print the largest one
 		}
-	public String longestMovieName(HashMap<Integer, String> name) {
+	public String longestMovieName(HashMap<Integer, String> name) { // special feature that finds the longest movie name
 		String longest = ""; // iterating through values not keys
 		for (String key: name.values()) {
-			if (key.length() > longest.length()) {
+			if (key.length() > longest.length()) { // run through everything and keep changing depending on length
 				longest = key;
 			}
 		}
 		return longest;
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) { // main method for running the whole game
 		try {
 			new KBG().FileReader();
 		} catch (FileNotFoundException e) {
