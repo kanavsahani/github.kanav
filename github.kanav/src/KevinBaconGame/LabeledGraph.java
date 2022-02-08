@@ -63,7 +63,7 @@ public class LabeledGraph<E, T> {
 	}
 	
 	private class Vertex {
-		E info;
+		E info; 
 		HashSet<Edge> edges;
 		//vertex class to define a vertex with variables here
 		public Vertex(E info) {

@@ -21,7 +21,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 //all imports
-// Kevin Bacon Game By Kanav Sahani mwith help from mr. Friedman
+// Kevin Bacon Game By Kanav Sahani with help from mr. Friedman
 public class KBG extends JPanel {
 	HashMap<Integer, String> movies;
 	HashMap<Integer, String> actors;
