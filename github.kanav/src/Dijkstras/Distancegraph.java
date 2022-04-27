@@ -1,5 +1,6 @@
 package Dijkstras;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,9 +10,12 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 
-public class Distancegraph<E, T> { //use pseudocode
-	HashMap<E, Vertex> vertices;
-
+public class Distancegraph { //use pseudocode
+	HashMap<String, Vertex> vertices;
+	public Distancegraph() {
+		vertices = new HashMap<String, Vertex>();
+	}
+	
 	public void search(Vertex start, Vertex finale) {	
 		HashMap<Vertex, Integer> distances = new HashMap();
 		HashMap<Vertex, Boolean> visited = new HashMap();
@@ -28,10 +32,10 @@ public class Distancegraph<E, T> { //use pseudocode
 		distances.put(start, 0);
 		 while(!toVisit.isEmpty()) {
 	            curr = toVisit.pop();
-	            for (Edge e: curr.edges) {
-	            	Vertex neighbor = e.getNeighbor(curr);
-	            	if(distances.get(neighbor) > distances.get(curr) + (int) e.label) {
-	            		distances.put(neighbor, distances.get(curr) + (int) e.label);
+	            for (Edge String: curr.edges) {
+	            	Vertex neighbor = String.getNeighbor(curr);
+	            	if(distances.get(neighbor) > distances.get(curr) + (int) String.label) {
+	            		distances.put(neighbor, distances.get(curr) + (int) String.label);
 	            		toVisit.add(neighbor, 0);
 	            	}
 	            	if (neighbor.equals(finale)) {
@@ -41,27 +45,27 @@ public class Distancegraph<E, T> { //use pseudocode
 	            
 		 }	
 	}
-	 public E add(E info, int x, int y) {
+	 public String add(String info, int x, int y) {
 	        Vertex vertex = new Vertex(info, x, y);
 	        this.vertices.put(info, vertex);
 	        return info;
 	    }
 	 
-	 public void connect(E info1, E info2, T label) {
+	 public void connect(String info1, String info2, Integer label) {
 		 Vertex v1 = vertices.get(info1);
 		 Vertex v2 = vertices.get(info2);
 		 if (v1 == null || v2 == null) {
 		 System.out.println("Vertex " + (v1==null? v1:v2).toString() + "not found");
 		 return;
 		 }
-		 Edge e = new Edge(label, v1, v2);
-		 v1.edges.add(e);
-		 v2.edges.add(e);
+		 Edge String = new Edge(label, v1, v2);
+		 v1.edges.add(String);
+		 v2.edges.add(String);
 		 }
-	public ArrayList<E> backtrace(Vertex target, HashMap<Vertex, Vertex> leadsTo) {
+	public ArrayList<String> backtrace(Vertex target, HashMap<Vertex, Vertex> leadsTo) {
 		
 		Vertex curr = target;
-		ArrayList<E> path = new ArrayList<E>();
+		ArrayList<String> path = new ArrayList<String>();
 		
 		while (curr != null) {
 			path.add(0, curr.info);
@@ -71,9 +75,9 @@ public class Distancegraph<E, T> { //use pseudocode
 		
 	}
 	private class Edge {
-		T label;
+		Integer label;
 		Vertex v1, v2;
-		public Edge(T label, Vertex v1, Vertex v2) {
+		public Edge(Integer label, Vertex v1, Vertex v2) {
 			this.label = label; this.v1 = v1; this.v2 = v2;
 		}
 		public Vertex getNeighbor(Vertex v) {
@@ -83,11 +87,11 @@ public class Distancegraph<E, T> { //use pseudocode
 			return v1;
 		}
 	}
-	private class Vertex {
-		E info;
+	public class Vertex {
+		String info;
 		int x; int y;
 		HashSet<Edge> edges;
-		public Vertex(E info, int x, int y) {
+		public Vertex(String info, int x, int y) {
 			this.info = info;
 			this.x = x;
 			this.y = y;
@@ -95,8 +99,20 @@ public class Distancegraph<E, T> { //use pseudocode
 		}
 	}
 	public void paint (Graphics G) {
-		for (Vertex V: vertices.values())
-			G.drawOval(V.x, V.y, 10, 10);
+		for (Vertex V: vertices.values()) {
+			G.setColor(Color.BLUE);
+			G.fillOval(V.x, V.y, 10, 10);
+			G.setColor(Color.RED);
+			G.drawString((String) V.info, V.x+5, V.y+5);
+			for (Edge String: V.edges) {
+				Vertex neighbor = String.getNeighbor(V);
+				G.drawLine(V.x, V.y, neighbor.x, neighbor.y);
+			}
+		}
 		
+			
+		
+			
+			
 	}
 }
