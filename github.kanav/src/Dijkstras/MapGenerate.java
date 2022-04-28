@@ -38,7 +38,9 @@ Image img;
 public static final int WIDTH = 1200, HEIGHT = 1000;
 public Distancegraph drawPoints = new Distancegraph();
 Vertex temp;
-Boolean Generator = false;
+Boolean Generator = true;
+Vertex v1;
+Vertex v2;
 	
 	public MapGenerate() {
 		img = Toolkit.getDefaultToolkit().getImage("Images/US.jpg"); // variable for the image
@@ -54,7 +56,8 @@ Boolean Generator = false;
 		 JButton RouteFindingMode = new JButton();
 		 RouteFindingMode.addActionListener(new ActionListener (){
 			public void actionPerformed(ActionEvent e) {
-				Generator = true;
+				Generator = !Generator;
+				System.out.println("hi");
 			} 
 		 });
 		try {
@@ -68,7 +71,7 @@ Boolean Generator = false;
 		paintPanel.addMouseListener(new MouseListener() {
 			public void mouseClicked(MouseEvent e) {
 			int counter = 0;
-
+			
 		// if in generator Mode (making vertices) do all this. if False, do route finding mode (finding shortest route) create a new button and give it an action listener. if pressed, make a boolean that changes to false, adn then inside current mouse listener, amke a route listener
 
 			if (Generator == true) {
@@ -76,7 +79,8 @@ Boolean Generator = false;
 					int distance = (int) Math.sqrt((s.y - e.getY()) * (s.y - e.getY()) + (s.x - e.getX()) * (s.x - e.getX()));
 					if (distance < 50) {// if cursor equals x value from the distancegraph
 						if (temp != null) {
-							drawPoints.connect(s.info, temp.info, null);
+							int ans = Integer.parseInt(JOptionPane.showInputDialog("Give your connection a weighted value"));
+							drawPoints.connect(s.info, temp.info, ans);
 							drawPoints.paint(paintPanel.getGraphics());
 						}
 
@@ -91,7 +95,6 @@ Boolean Generator = false;
 						System.out.println(value);
 						try { // try catch method for catching errors
 							writer.write(value + "\n"); // write the String with the result
-//							writer.write(value + "is connected to" + value-1);
 						}catch(Exception ex) { // catch errors
 							ex.printStackTrace();
 						}
@@ -100,48 +103,28 @@ Boolean Generator = false;
 
 			}
 			if (Generator == false) {
-				JList list = new JList((ListModel) drawPoints.vertices.values()); //data has type Object[]
-				list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-				list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
-				list.setVisibleRowCount(-1);
-				JScrollPane listScroller = new JScrollPane(list);
-				listScroller.setPreferredSize(new Dimension(250, 80));
-				Vertex start = list.clicked(#1);
-				Vertex target = list.clicked(#2);
-				HashMap<Vertex, Integer> distances = new HashMap();
-				HashMap<Vertex, Boolean> visited = new HashMap();
-				HashMap<Vertex, Edge> leadsTo = new HashMap();
-				Vertex curr = vertices.get(start);
-				PQ<Vertex> toVisit = new PQ();
-				HashSet<Edge> edges;
-				int distance = Integer.MAX_VALUE;
-				toVisit.add(start, 0);
-				leadsTo.put(start, null);
-				for (Vertex v: vertices.values()) {
-					distances.put(v, distance);
+				for (Vertex s: drawPoints.vertices.values()) {
+					
+						if (v1 == null ) {
+							v1 = s;
+						}
+						else {
+							v2 = s;
+						}
+						
+					}
+				
+				if (v1 != null && v2 != null) {
+					drawPoints.search(v1, v2);
+					v1 = null;
+					v2 = null;
+					drawPoints.backtrace(v2, drawPoints.vertices);
 				}
-				distances.put(start, 0);
-				 while(!toVisit.isEmpty()) {
-			            curr = toVisit.pop();
-			            for (Edge String: curr.edges) {
-			            	Vertex neighbor = String.getNeighbor(curr);
-			            	if(distances.get(neighbor) > distances.get(curr) + (int) String.label) {
-			            		distances.put(neighbor, distances.get(curr) + (int) String.label);
-			            		toVisit.add(neighbor, 0);
-			            	}
-			            	if (neighbor.equals(finale)) {
-			            		System.out.println("found");
-			            	}
-				Generator = true;
-			}
-			}
-
-			// create a pixel range. point has to be within 10 pixels in order to say that a point was "clicked" on
-
 			}
 			}
 			public void mousePressed(MouseEvent e) {}public void mouseReleased(MouseEvent e) {}public void mouseEntered(MouseEvent e) {}public void mouseExited(MouseEvent e) {}
 		 });
+		
 
 		 frame.addWindowListener(new java.awt.event.WindowAdapter() {
 			    @Override
@@ -165,8 +148,8 @@ Boolean Generator = false;
 		paintPanel.setPreferredSize(new Dimension(WIDTH-50, HEIGHT-50));
 		RouteFindingMode.setPreferredSize(new Dimension(50,50));
 		frame.setSize(WIDTH, HEIGHT);
+		paintPanel.add(RouteFindingMode);
 		frame.add(paintPanel);
-		frame.add(RouteFindingMode);
 		frame.setVisible(true);
 
 
