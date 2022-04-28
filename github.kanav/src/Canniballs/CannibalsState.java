@@ -1,10 +1,10 @@
-package Cannibals.src.github.kanav;
+package Canniballs;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class CannibalsState {
 
@@ -40,7 +40,9 @@ public class CannibalsState {
         return other.numCannibalsLeft == this.numCannibalsLeft &&
                 other.numCannibalsRight == this.numCannibalsRight &&
                 other.numMissionariesLeft == this.numMissionariesLeft &&
-                other.numMissionariesRight == this.numMissionariesRight;
+                other.numMissionariesRight == this.numMissionariesRight &&
+                other.boatOnLeft == this.boatOnLeft;
+        
     }
 
     public int hashCode() {
@@ -87,14 +89,15 @@ public class CannibalsState {
             System.out.println("Max depth reached!");
             return null;
         }
-        System.out.println("Depth: ");
+        System.out.println("Depth: " + depth);
         HashSet<CannibalsState> nexts = this.nextStates();
         for (CannibalsState next : nexts) {
+           
+            if(previous.contains(next))  continue;
             System.out.println("Next state: " + next);
-            if(previous.contains(next)) continue;
             previous.add(next);
 
-            List<CannibalsState> x = solve(depth + 1, previous, solution);
+            List<CannibalsState> x = next.solve(depth + 1, previous, solution);
             if (x != null) {
                 solution.add(next);
                 return solution;
@@ -107,19 +110,12 @@ public class CannibalsState {
 
     public static void main(String[] args){
         System.out.println("hi");
-//        CannibalsState start = new CannibalsState(3,3,0,0,true);
-//        Set<CannibalsState> prev = new HashSet<>();
-//        prev.add(start);
-//        System.out.println(start);
-//
-//
-//
-//
-//
-//
-//
-//
-//        List<CannibalsState> solution = start.solve(0, prev, new ArrayList<>());
-//        System.out.println(solution);
+        CannibalsState start = new CannibalsState(3,3,0,0,true);
+        Set<CannibalsState> prev = new HashSet<>();
+        prev.add(start);
+        System.out.println(start);
+        List<CannibalsState> solution = start.solve(0, prev, new ArrayList<>());
+        Collections.reverse(solution);
+        System.out.println(solution);
     }
 }
