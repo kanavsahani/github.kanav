@@ -15,7 +15,7 @@ import KevinBaconGame.LabeledGraph;
 import graphMap.Graph;
 import huffpuff.PriorityQueue.node;
 
-public class PQ <E>{
+public class PQ <E> extends Distancegraph{
 	// List to help set up queue
 	private final List<node> queue;
     public class node {
@@ -46,7 +46,10 @@ public class PQ <E>{
         		return true;
         	return false;
         }
-    } 
+    }
+    public boolean isEmpty() {
+    	return queue.size() == 0;
+    }
     // used for adding a branch. inputs a branch and its priority
     public E add(E branch, int priority) {
     	// node with the inputs

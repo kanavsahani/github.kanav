@@ -79,8 +79,7 @@ Vertex v2;
 					int distance = (int) Math.sqrt((s.y - e.getY()) * (s.y - e.getY()) + (s.x - e.getX()) * (s.x - e.getX()));
 					if (distance < 50) {// if cursor equals x value from the distancegraph
 						if (temp != null) {
-							int ans = Integer.parseInt(JOptionPane.showInputDialog("Give your connection a weighted value"));
-							drawPoints.connect(s.info, temp.info, ans);
+							drawPoints.connect(s.info, temp.info, null);
 							drawPoints.paint(paintPanel.getGraphics());
 						}
 
@@ -110,7 +109,7 @@ Vertex v2;
 						}
 						else {
 							v2 = s;
-						}
+						} 
 						
 					}
 				
@@ -118,7 +117,7 @@ Vertex v2;
 					drawPoints.search(v1, v2);
 					v1 = null;
 					v2 = null;
-					drawPoints.backtrace(v2, drawPoints.vertices);
+//					drawPoints.backtrace(v2, drawPoints.vertices);
 				}
 			}
 			}
