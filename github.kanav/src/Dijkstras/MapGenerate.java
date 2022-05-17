@@ -41,10 +41,12 @@ Vertex temp;
 Boolean Generator = true;
 Vertex v1;
 Vertex v2;
+String modeChoice = "Point Making Mode";
 	
 	public MapGenerate() {
 		img = Toolkit.getDefaultToolkit().getImage("Images/US.jpg"); // variable for the image
 		JFrame frame = new JFrame();
+		JPanel containerPanel = new JPanel();
 		JPanel paintPanel = new JPanel() { // paint panel
 			 public void paint(Graphics g) { // paint method
 				g.setColor(Color.gray); // sets the color of background
@@ -54,12 +56,22 @@ Vertex v2;
 		 }; // closing bracket
 		 Writer fileWriter = null;
 		 JButton RouteFindingMode = new JButton();
+		 
+		 frame.repaint();
+		 RouteFindingMode.setText("Change Mode" +  " " + modeChoice);
 		 RouteFindingMode.addActionListener(new ActionListener (){
 			public void actionPerformed(ActionEvent e) {
 				Generator = !Generator;
-				System.out.println("hi");
+				if (Generator == true) {
+					 modeChoice = "Point Making Mode";
+				 }
+				 else {
+					 modeChoice = "Route Finding Mode";
+				 }
+				RouteFindingMode.setText("Change Mode" +  " " + modeChoice);
 			} 
 		 });
+		 
 		try {
 			fileWriter = new FileWriter("UserInputs.txt");
 		} catch (IOException e1) {
@@ -79,7 +91,7 @@ Vertex v2;
 					int distance = (int) Math.sqrt((s.y - e.getY()) * (s.y - e.getY()) + (s.x - e.getX()) * (s.x - e.getX()));
 					if (distance < 50) {// if cursor equals x value from the distancegraph
 						if (temp != null) {
-							drawPoints.connect(s.info, temp.info, null);
+							drawPoints.connect(s.info, temp.info, distance);
 							drawPoints.paint(paintPanel.getGraphics());
 						}
 
@@ -89,6 +101,11 @@ Vertex v2;
 				}
 					if (counter == 0) {
 						String value = JOptionPane.showInputDialog("Type in the name of the state you clicked on.");
+						while (value == null || value.equals("")) {
+							value = JOptionPane.showInputDialog("Type in the name of the state you clicked on.");
+						}
+						
+						
 						drawPoints.add(value, e.getX(), e.getY());
 						drawPoints.paint(paintPanel.getGraphics());
 						System.out.println(value);
@@ -102,23 +119,25 @@ Vertex v2;
 
 			}
 			if (Generator == false) {
+				
 				for (Vertex s: drawPoints.vertices.values()) {
-					
-						if (v1 == null ) {
+					int distance = (int) Math.sqrt((s.y - e.getY()) * (s.y - e.getY()) + (s.x - e.getX()) * (s.x - e.getX()));
+					if (distance > 50) { continue; }
+						if(v1 == null) {
 							v1 = s;
-						}
-						else {
+						}else if(v2 == null) {
 							v2 = s;
-						} 
-						
+						}				
 					}
 				
 				if (v1 != null && v2 != null) {
-					drawPoints.search(v1, v2);
+					System.out.println(v1.toString());
+					System.out.println(v2.toString());
+					JOptionPane.showMessageDialog(paintPanel, drawPoints.search(v1, v2));
 					v1 = null;
 					v2 = null;
-//					drawPoints.backtrace(v2, drawPoints.vertices);
 				}
+				
 			}
 			}
 			public void mousePressed(MouseEvent e) {}public void mouseReleased(MouseEvent e) {}public void mouseEntered(MouseEvent e) {}public void mouseExited(MouseEvent e) {}
@@ -144,11 +163,12 @@ Vertex v2;
 			            }
 			        }
 			});
-		paintPanel.setPreferredSize(new Dimension(WIDTH-50, HEIGHT-50));
-		RouteFindingMode.setPreferredSize(new Dimension(50,50));
+		paintPanel.setPreferredSize(new Dimension(WIDTH, HEIGHT-50));
+		containerPanel.setPreferredSize(new Dimension(WIDTH-50, HEIGHT-(HEIGHT-50)));
 		frame.setSize(WIDTH, HEIGHT);
-		paintPanel.add(RouteFindingMode);
-		frame.add(paintPanel);
+		containerPanel.add(RouteFindingMode);
+		containerPanel.add(paintPanel);
+		frame.add(containerPanel);
 		frame.setVisible(true);
 
 

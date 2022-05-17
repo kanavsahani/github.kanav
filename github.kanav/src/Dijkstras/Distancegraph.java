@@ -3,11 +3,14 @@ package Dijkstras;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 public class Distancegraph { //use pseudocode
@@ -16,10 +19,10 @@ public class Distancegraph { //use pseudocode
 		vertices = new HashMap<String, Vertex>();
 	}
 	
-	public void search(Vertex start, Vertex finale) {	
+	public String search(Vertex start, Vertex finale) {	
 		HashMap<Vertex, Integer> distances = new HashMap();
 		HashMap<Vertex, Boolean> visited = new HashMap();
-		HashMap<Vertex, Edge> leadsTo = new HashMap();
+		HashMap<Vertex, Vertex> leadsTo = new HashMap();
 		Vertex curr = vertices.get(start);
 		PQ<Vertex> toVisit = new PQ();
 		HashSet<Edge> edges;
@@ -39,16 +42,27 @@ public class Distancegraph { //use pseudocode
 	            		toVisit.add(neighbor, 0);
 	            	}
 	            	if (neighbor.equals(finale)) {
-	            		System.out.println("found");
+	            		List<Vertex> back = backtrace(finale, leadsTo);
+	            		System.out.println(back);
+	            		return back.stream().map(v -> v.info).collect(Collectors.joining("\n"));
 	            	}
 	            }
 	            
-		 }	
+		 }
+		 return "Not Found";
 	}
 	 public String add(String info, int x, int y) {
 	        Vertex vertex = new Vertex(info, x, y);
 	        this.vertices.put(info, vertex);
 	        return info;
+	    }
+	 public String toString() {
+	        StringBuilder s = new StringBuilder();
+	        for (Vertex v : vertices.values()) {
+	            s.append(v + ": ");
+	            s.append('\n');
+	        }
+	        return s.toString();
 	    }
 	 
 	 public void connect(String info1, String info2, Integer label) {
@@ -62,18 +76,18 @@ public class Distancegraph { //use pseudocode
 		 v1.edges.add(String);
 		 v2.edges.add(String);
 		 }
-	public ArrayList<String> backtrace(Vertex target, HashMap<Vertex, Vertex> leadsTo) {
-		
-		Vertex curr = target;
-		ArrayList<String> path = new ArrayList<String>();
-		
-		while (curr != null) {
-			path.add(0, curr.info);
-			curr = leadsTo.get(curr);
-		}
-		return path;
-		
-	}
+	public List<Vertex> backtrace(Vertex target, HashMap<Vertex, Vertex> leadsTo) {
+		final List<Vertex> path = new ArrayList<>();
+        Vertex curr = target;
+
+        while(curr != null) {
+            path.add(curr);
+            curr = leadsTo.getOrDefault(curr, null);
+        }
+
+        Collections.reverse(path);
+        return path;
+    }
 	private class Edge {
 		Integer label;
 		Vertex v1, v2;
@@ -97,12 +111,15 @@ public class Distancegraph { //use pseudocode
 			this.y = y;
 			edges = new HashSet<Edge>();
 		}
+		public String toString() {
+			return info;
+		}
 	}
 	public void paint (Graphics G) {
 		for (Vertex V: vertices.values()) {
 			G.setColor(Color.BLUE);
 			G.fillOval(V.x, V.y, 10, 10);
-			G.setColor(Color.RED);
+			G.setColor(Color.BLACK);
 			G.drawString((String) V.info, V.x+5, V.y+5);
 			for (Edge String: V.edges) {
 				Vertex neighbor = String.getNeighbor(V);
