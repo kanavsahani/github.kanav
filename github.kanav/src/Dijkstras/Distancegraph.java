@@ -40,10 +40,10 @@ public class Distancegraph { //use pseudocode
 	            	if(distances.get(neighbor) > distances.get(curr) + (int) String.label) {
 	            		distances.put(neighbor, distances.get(curr) + (int) String.label);
 	            		toVisit.add(neighbor, 0);
+	            		leadsTo.put(neighbor, curr);
 	            	}
 	            	if (neighbor.equals(finale)) {
 	            		List<Vertex> back = backtrace(finale, leadsTo);
-	            		System.out.println(back);
 	            		return back.stream().map(v -> v.info).collect(Collectors.joining("\n"));
 	            	}
 	            }
@@ -55,16 +55,7 @@ public class Distancegraph { //use pseudocode
 	        Vertex vertex = new Vertex(info, x, y);
 	        this.vertices.put(info, vertex);
 	        return info;
-	    }
-	 public String toString() {
-	        StringBuilder s = new StringBuilder();
-	        for (Vertex v : vertices.values()) {
-	            s.append(v + ": ");
-	            s.append('\n');
-	        }
-	        return s.toString();
-	    }
-	 
+	    }	 
 	 public void connect(String info1, String info2, Integer label) {
 		 Vertex v1 = vertices.get(info1);
 		 Vertex v2 = vertices.get(info2);
@@ -88,7 +79,7 @@ public class Distancegraph { //use pseudocode
         Collections.reverse(path);
         return path;
     }
-	private class Edge {
+	public class Edge {
 		Integer label;
 		Vertex v1, v2;
 		public Edge(Integer label, Vertex v1, Vertex v2) {
@@ -104,7 +95,7 @@ public class Distancegraph { //use pseudocode
 	public class Vertex {
 		String info;
 		int x; int y;
-		HashSet<Edge> edges;
+		public HashSet<Edge> edges;
 		public Vertex(String info, int x, int y) {
 			this.info = info;
 			this.x = x;
