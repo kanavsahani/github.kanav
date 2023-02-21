@@ -42,6 +42,7 @@ public class GUI {
 				g.fillRect(0, 0, width, height-50);
 				for (Shape s: shapeContainer) {
 					s.draw(g);
+					// good
 				}
 			}
 			// painting whole canvas with color and using for each loop to draw each shape from  the user
